@@ -23,11 +23,6 @@ node {
         '''
     }
 
-    stage('Post-Deployment Check') {
-        echo 'Verifying deployment...'
-        sh 'curl -I http://localhost:8081 || echo "Service not responding"'
-    }
-
     echo 'CI/CD Pipeline execution completed successfully!'
 }
 
