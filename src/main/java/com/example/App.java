@@ -11,13 +11,12 @@ public class App {
         server.createContext("/", exchange -> {
             String response = "Hello from Java WebApp running in Docker!";
             exchange.sendResponseHeaders(200, response.getBytes().length);
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
         });
-        System.out.println("Server started on port 8080...");
+        System.out.println("Server started on port 8080");
         server.start();
     }
 }
-
 
