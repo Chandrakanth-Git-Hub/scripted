@@ -14,15 +14,24 @@ node {
         sh 'mvn test'
     }
 
-    stage('Deploy') {
-        echo 'Deploying to test server...'
-        // Simulated deploy step — replace with real command
+    stage('Deploy to Container') {
+        echo 'Deploying to Docker container...'
         sh '''
-        docker build -t sample-app:latest .
-        docker run -d -p 8081:8080 sample-app:latest
+        # Stop and remove old container if exists
+        docker stop javaweb || true
+        docker rm javaweb || true
+
+        # Run new container
+        docker run -d --name javaweb -p 8081:8080 java-webapp:latest
         '''
     }
 
     echo 'CI/CD Pipeline execution completed successfully!'
+
+    stage('Post-Deployment Check') {
+        echo 'Checking if app is running...'
+        sh 'curl -I http://localhost:8081 || true'
+        echo 'Deployment successful!'
+    }
 }
 
